@@ -128,23 +128,6 @@ class CustomGCN(nn.Module):
         return x
 
 
-class GCN_DGI(nn.Module):
-    def __init__(self, input_dim, hidden_dim, output_dim, drop_ratio=0.5):
-        super(GCN_DGI, self).__init__()
-        self.conv1 = GCNConvWithEdgeAttr(input_dim, hidden_dim)
-        self.conv2 = GCNConvWithEdgeAttr(hidden_dim, output_dim)
-        self.drop_ratio = drop_ratio
-
-    def forward(self, x, edge_index):
-
-        x = self.conv1(x, edge_index)
-        x = F.relu(x)
-        x = F.dropout(x, p=self.drop_ratio, training=self.training)
-        x = self.conv2(x, edge_index)
-
-        return x
-
-
 class OfficialGCN(nn.Module):
     def __init__(self, input_dim, hidden_dim, output_dim, drop_ratio=0):
         super().__init__()
@@ -161,27 +144,3 @@ class OfficialGCN(nn.Module):
         x = self.conv2(x, edge_index)
 
         return x
-
-
-if __name__ == '__main__':
-    dataset = KarateClub()
-    # device = torch.device(f'cuda:2' if torch.cuda.is_available() else 'cpu')
-    # dataset = PygNodePropPredDataset(name='ogbn-arxiv', root=f'./data/ogb')
-    data = dataset[0]
-    # gcn1 = GCNConv(in_channels=data.num_node_features, out_channels=3, add_self_loops=True, normalize=True)
-    # gcn2 = CustomGCNConv(in_channels=data.num_node_features, out_channels=3)
-    # for para1, para2 in zip(gcn1.parameters(), gcn2.parameters()):
-    #     para2.data = deepcopy(para1.data)
-    # emb1 = gcn1(data.x, data.edge_index)
-    # emb2 = gcn2(data.x, data.edge_index)
-    # print(1)
-    edge_prompt = nn.Parameter(torch.ones([1, dataset.num_node_features]))
-
-    gcn1 = OfficialGCN(dataset.num_node_features, 12, dataset.num_classes)
-    gcn2 = CustomGCN(dataset.num_node_features, 12, dataset.num_classes)
-    for para1, para2 in zip(gcn1.parameters(), gcn2.parameters()):
-        para1.data = deepcopy(para2.data)
-
-    emb1 = gcn1(data)
-    emb2 = gcn2(data, edge_prompt=edge_prompt)
-    print(1)
