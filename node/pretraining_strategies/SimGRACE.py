@@ -9,7 +9,7 @@ import torch.nn.functional as F
 from torch_geometric.loader import DataLoader
 
 from load_data import load_node_data, NodePretrain
-from model import CustomGCN, GCN_DGI
+from model import CustomGCN
 
 
 def perturb(gnn, device, eta=1.0):
