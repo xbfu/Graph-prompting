@@ -2,7 +2,7 @@ import random
 import logging
 import numpy as np
 import torch
-from pretraining_strategies import EdgePredGPPT, SimGRACE, DGI, EdgePredGraphPrompt
+from pretraining_strategies import EdgePredGPPT, SimGRACE, EdgePredGraphPrompt
 from logger import Logger
 
 
@@ -28,9 +28,6 @@ def run(dataset_name, pretrain_task, gnn_type, num_layer, hidden_dim, batch_size
         pt.pretrain(batch_size, lr, decay, epochs)
     elif pretrain_task == 'SimGRACE':
         pt = SimGRACE.SimGRACE(dataset_name, gnn_type, num_layer, hidden_dim, batch_size, device, seed, logger)
-        pt.pretrain(batch_size, lr, decay, epochs)
-    elif pretrain_task == 'DGI':
-        pt = DGI.DGI(dataset_name, gnn_type, num_layer, hidden_dim, batch_size, device, seed, logger)
         pt.pretrain(batch_size, lr, decay, epochs)
     elif pretrain_task == 'EdgePredGraphPrompt':
         pt = EdgePredGraphPrompt.EdgePredGraphPrompt(dataset_name, gnn_type, num_layer, hidden_dim, batch_size, device, seed, logger)
