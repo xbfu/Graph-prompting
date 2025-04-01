@@ -80,39 +80,3 @@ class CustomGIN(nn.Module):
 
         return node_emb
 
-
-class GIN_DGI(nn.Module):
-    def __init__(self, num_layer, input_dim, hidden_dim, drop_ratio=0.5):
-        super(GIN_DGI, self).__init__()
-        self.num_layer = num_layer
-        self.drop_ratio = drop_ratio
-
-        if self.num_layer < 2:
-            raise ValueError("Number of GNN layers must be greater than 1.")
-
-        self.convs = nn.ModuleList()
-        self.batch_norms = nn.ModuleList()
-
-        self.convs.append(GINConv(input_dim=input_dim, hidden_dim=hidden_dim))
-        self.batch_norms.append(nn.BatchNorm1d(hidden_dim))
-
-        for layer in range(num_layer - 1):
-            self.convs.append(GINConv(input_dim=hidden_dim, hidden_dim=hidden_dim))
-            self.batch_norms.append(nn.BatchNorm1d(hidden_dim))
-
-    def forward(self, x, edge_index, prompt_type=None, prompt=False, pooling='mean'):
-        h_list = [x]
-
-        for layer in range(self.num_layer):
-            h = self.convs[layer](h_list[layer], edge_index)
-            h = self.batch_norms[layer](h)
-
-            if layer == self.num_layer - 1:
-                h = F.dropout(h, self.drop_ratio, training=self.training)
-            else:
-                h = F.dropout(F.relu(h), self.drop_ratio, training=self.training)
-
-            h_list.append(h)
-
-        node_emb = h_list[-1]
-        return node_emb
