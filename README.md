@@ -5,7 +5,7 @@
 - torch-cluster==1.6.3  
 - torch-sparse==0.6.18   
 - torch-scatter==2.1.2
-- - ogb==1.3.6 
+- ogb==1.3.6 
 
 
 ## Usage
