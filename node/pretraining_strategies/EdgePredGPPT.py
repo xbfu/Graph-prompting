@@ -10,7 +10,7 @@ from torch_geometric.loader import DataLoader
 from torch_geometric.utils import batched_negative_sampling
 
 from load_data import load_node_data, NodePretrain
-from model import CustomGCN, GCN_DGI
+from model import CustomGCN
 
 
 def mask_edges(edge_index, k):
