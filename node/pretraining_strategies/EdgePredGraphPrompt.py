@@ -11,7 +11,7 @@ from torch_geometric.utils import structured_negative_sampling
 
 from get_args import get_args
 from load_data import load_node_data, NodePretrain
-from model import CustomGCN, GCN_DGI
+from model import CustomGCN
 
 
 class EdgePredGraphPrompt(nn.Module):
